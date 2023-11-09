@@ -24,17 +24,24 @@ class IntegrationTests(@Autowired val restTemplate: TestRestTemplate) {
         println(">> Setup")
     }
 
+    // 백틱 함수 이름 : 백틱으로 함수 이름을 둘러싼 후 공백과 특수 문자를 사용 가능
+    // 테스트 코드에서 테스트하는 내용을 더 알기 쉽게 나타내기 위해 사용한다.
     @Test
     fun `Assert blog page title, content and status code`() {
+        println(">> Assert blog page title, content and status code")
         val entity = restTemplate.getForEntity<String>("/")
         // restTemplate을 사용하여 '/' 경로로 GET 요청을 보내고 응답을 문자열로 수신
         assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
-        assertThat(entity.body).contains("<h1>Blog</h1>")
+        assertThat(entity.body).contains("<h1>Blog</h1>", "Lorem")
     }
 
     @Test
     fun `Assert article page title, content and status code`() {
-        println(">> TODO")
+        println(">> Assert article page title, content and status code")
+        val title = "Lorem"
+        val entity = restTemplate.getForEntity<String>("/article/${title.toSlug()}")
+        assertThat(entity.statusCode).isEqualTo(HttpStatus.OK)
+        assertThat(entity.body).contains(title, "Lorem", "dolor sit amet")
     }
 
     @AfterAll
